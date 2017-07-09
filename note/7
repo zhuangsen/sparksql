@@ -1,0 +1,44 @@
+7-6 操作Hive表数据
+
+    spark.sql("select deptno, count(1) from emp group by deptno").show
+    spark.sql("select deptno, count(1) from emp group by deptno").filter("deptno is not null").show
+    spark.sql("select deptno, count(1) as mount from emp group by deptno").filter("deptno is not null").write.saveAsTable("hive_table")
+    spark.sqlContext.setConf("spark.sql.shuffle.partitions","10")
+
+
+7-7 操作MySQL的表数据:
+spark.read.format("jdbc").option("url", "jdbc:mysql://localhost:3306/sparksql").option("dbtable", "sparksql.TBLS").option("user", "root").option("password", "inserthome").option("driver", "com.mysql.jdbc.Driver").load()
+
+val jdbcdf = spark.read.format("jdbc").option("url", "jdbc:mysql://localhost:3306/sparksql").option("dbtable", "sparksql.TBLS").option("user", "root").option("password", "inserthome").option("driver", "com.mysql.jdbc.Driver").load()
+
+import java.util.Properties
+val connectionProperties = new Properties()
+connectionProperties.put("user", "root")
+connectionProperties.put("password", "inserthome")
+connectionProperties.put("driver", "com.mysql.jdbc.Driver")
+
+val jdbcDF2 = spark.read.jdbc("jdbc:mysql://localhost:3306", "sparksql.TBLS", connectionProperties)
+
+CREATE TEMPORARY VIEW jdbcTable
+USING org.apache.spark.sql.jdbc
+OPTIONS (
+  url "jdbc:mysql://localhost:3306",
+  dbtable "sparksql.TBLS",
+  user 'root',
+  password 'inserthome',
+  driver 'com.mysql.jdbc.Driver'
+);
+
+外部数据源综合案例
+create database spark;
+use spark;
+
+CREATE TABLE DEPT(
+DEPTNO int(2) PRIMARY KEY,
+DNAME VARCHAR(14) ,
+LOC VARCHAR(13) ) ;
+
+INSERT INTO DEPT VALUES(10,'ACCOUNTING','NEW YORK');
+INSERT INTO DEPT VALUES(20,'RESEARCH','DALLAS');
+INSERT INTO DEPT VALUES(30,'SALES','CHICAGO');
+INSERT INTO DEPT VALUES(40,'OPERATIONS','BOSTON');
