@@ -10,8 +10,9 @@ object DataFrameApp {
 
     val spark = SparkSession.builder().appName("DataFrameApp").master("local[2]").getOrCreate()
 
+    val path = "file:////home/madison/app/spark-2.1.0-bin-2.6.0-cdh5.7.0/examples/src/main/resources/people.json";
     // 将json文件加载成一个dataframe
-    val peopleDF = spark.read.format("json").load("file:////home/madison/app/spark-bin-2.6.0-cdh5.7.0/examples/src/main/resources/people.json")
+    val peopleDF = spark.read.format("json").load(path)
 
     // 输出dataframe对应的schema信息
     peopleDF.printSchema()
