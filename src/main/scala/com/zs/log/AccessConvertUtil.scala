@@ -1,5 +1,6 @@
 package com.zs.log
 
+import com.zs.utils.IPUtils
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
 
@@ -31,7 +32,7 @@ object AccessConvertUtil {
     try {
       val splits = log.split("\t")
 
-      val url = splits(0)
+      val url = splits(1)
       val traffic = splits(2).toLong
       val ip = splits(3)
 
@@ -46,7 +47,7 @@ object AccessConvertUtil {
         cmsId = cmsTypeId(1).toLong
       }
 
-      val city = ""
+      val city = IPUtils.getCity(ip)
       val time = splits(0)
       val day = time.substring(0, 10).replace("-", "")
 
